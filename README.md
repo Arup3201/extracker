@@ -4,7 +4,7 @@ Personal expense tracker
 
 ## Features
 
-- Add/Edit/Delete expenses
+- Add/Edit/Delete expenses with time, category
 - Add extra notes to expense
 - Categorize expenses (e.g. Food, Rent etc).
 - Add new categories
