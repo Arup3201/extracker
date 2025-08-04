@@ -1,7 +1,15 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+
+import HomePage from './pages/home';
+import ExpensesPage from './pages/expenses'
+
 function App() {
-  return <>Hello World
-  <button className="btn btn-primary">Boostrap button</button>
-  </>;
+  return <Router>
+    <Routes>
+      <Route element={<HomePage />} path='/' />
+      <Route element={<ExpensesPage />} path='/expenses' />
+    </Routes>
+  </Router>;
 }
 
 export default App;
