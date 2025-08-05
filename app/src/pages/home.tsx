@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const EXPENSE_MOCK_DATA = [
   {
     month: "January",
@@ -94,6 +96,21 @@ const EXPENSE_MOCK_DATA = [
 ];
 
 const HomePage = () => {
+  const [open, setOpen] = useState<number[]>([]);
+
+  function handleToggleAccordion(mIndex: number) {
+    setOpen((snap) => {
+      const copy = [...snap];
+      const index = copy.indexOf(mIndex);
+      if (index === -1) {
+        return [...copy, mIndex];
+      }
+
+      copy.splice(index, 1);
+      return copy;
+    });
+  }
+
   return (
     <>
       <header>
@@ -134,29 +151,41 @@ const HomePage = () => {
             <button>Add Expense</button>
           </form>
         </section>
-        {EXPENSE_MOCK_DATA.map((monthlyExpenseInfo) => {
+        {EXPENSE_MOCK_DATA.map((monthlyExpenseInfo, monthIndex) => {
           return (
             <section>
               <h2>{monthlyExpenseInfo.month}</h2>
-              <div className="short-summary">
-                <h3>Short Summary</h3>
-                <span>
-                  Total: <b>Rs. {monthlyExpenseInfo.shortSummary.total}</b>
-                </span>
-                <span>
-                  Most expensive category:{" "}
-                  <b>
-                    {monthlyExpenseInfo.shortSummary.category.name} (Rs.{" "}
-                    {monthlyExpenseInfo.shortSummary.category.total})
-                  </b>
-                </span>
-                <span>
-                  Most expensive day:{" "}
-                  <b>
-                    {monthlyExpenseInfo.shortSummary.day.name} (Rs.{" "}
-                    {monthlyExpenseInfo.shortSummary.day.average})
-                  </b>
-                </span>
+              <div className="short-summary-box">
+                <div
+                  className="accordion"
+                  onClick={() => handleToggleAccordion(monthIndex)}
+                >
+                  <h3>Short Summary</h3>
+                  <span>{open.indexOf(monthIndex) > -1 ? "-" : "+"}</span>
+                </div>
+                <ul
+                  className={`panel short-summary-data ${
+                    open.indexOf(monthIndex) > -1 ? "visible" : ""
+                  }`}
+                >
+                  <li>
+                    Total: <b>Rs. {monthlyExpenseInfo.shortSummary.total}</b>
+                  </li>
+                  <li>
+                    Most expensive category:{" "}
+                    <b>
+                      {monthlyExpenseInfo.shortSummary.category.name} (Rs.{" "}
+                      {monthlyExpenseInfo.shortSummary.category.total})
+                    </b>
+                  </li>
+                  <li>
+                    Most expensive day:{" "}
+                    <b>
+                      {monthlyExpenseInfo.shortSummary.day.name} (Rs.{" "}
+                      {monthlyExpenseInfo.shortSummary.day.average})
+                    </b>
+                  </li>
+                </ul>
               </div>
               <div>
                 <h3>Expenses</h3>

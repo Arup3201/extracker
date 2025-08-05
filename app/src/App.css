@@ -20,8 +20,38 @@
   border-color: #535bf2;
 }
 
-.short-summary {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.5rem;
+.short-summary-box {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+  border-radius: 4px;
+  background-color: #535bf2;
+}
+
+.short-summary-data {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.2rem;
+}
+
+.accordion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.accordion > span {
+  display: inline-block;
+  font-size: 1.6rem;
+}
+
+.panel {
+  padding: 2px 4px;
+  display: none;
+}
+
+.visible {
+  display: block;
 }
