@@ -8,8 +8,6 @@ Personal expense tracker
 - Add extra notes to expense
 - Categorize expenses (e.g. Food, Rent etc).
 - Add new categories
-- Filter expenses based on time
-- Filter expenses based on category
 - Summarize monthly expense - total, most expensive category, most expensive day of the week with highest average expense
 - User can see few expenses of every month with their short summary
 - User can click on "Show more" for a full view of that month's expense
