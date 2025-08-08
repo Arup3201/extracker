@@ -1,5 +1,5 @@
 import { ERRORS } from "./error-codes";
-import { CustomError } from "./http-error";
+import { CustomError } from "./custom-error";
 
 class BadInputError extends CustomError {
   constructor(
