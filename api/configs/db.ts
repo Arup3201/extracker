@@ -24,7 +24,7 @@ const db: DB = {
     });
     return result;
   },
-  parameterizedQuery: async function (sql: string, params: string[]) {
+  parameterizedQuery: async function (sql: string, params: any[]) {
     const start = Date.now();
     const result = await this.pool.query(sql, params);
     const end = Date.now();
