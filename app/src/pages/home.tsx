@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { POST } from "../service/http";
 
 const EXPENSE_MOCK_DATA = [
   {
@@ -111,6 +112,32 @@ const HomePage = () => {
     });
   }
 
+  async function handleAddExpense(event: React.FormEvent) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const expense = await POST("/expenses", {
+        at: data.at,
+        amount: Number(data.amount),
+        category: data.category,
+        note: data.note,
+      });
+      console.log(expense);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const categories = [
+    { value: "food", label: "Food" },
+    { value: "rent", label: "Rent" },
+    { value: "travel", label: "Travel" },
+    { value: "necessities", label: "Daily Necessities" },
+  ];
+
   return (
     <>
       <header>
@@ -118,12 +145,12 @@ const HomePage = () => {
       </header>
       <main>
         <section>
-          <form>
+          <form onSubmit={handleAddExpense}>
             <div className="form-field">
               <label htmlFor="datetime">Date and time</label>
               <input
                 id="datetime"
-                name="datetime"
+                name="at"
                 type="datetime-local"
                 placeholder="Enter date and time"
               />
@@ -142,13 +169,16 @@ const HomePage = () => {
                 Category
               </label>
               <select name="category">
-                <option>Food</option>
-                <option>Rent</option>
-                <option>Travel</option>
-                <option>Health</option>
+                {categories.map((category) => (
+                  <option value={category.value}>{category.label}</option>
+                ))}
               </select>
             </div>
-            <button>Add Expense</button>
+            <div className="form-field">
+              <label htmlFor="note">Notes (Optional)</label>
+              <textarea id="note" name="note" placeholder="Enter notes" />
+            </div>
+            <button type="submit">Add Expense</button>
           </form>
         </section>
         {EXPENSE_MOCK_DATA.map((monthlyExpenseInfo, monthIndex) => {
