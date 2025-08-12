@@ -1,28 +1,14 @@
 import { RequestHandler, Router } from "express";
+
 import { ExpenseService } from "../services/expenses";
-import { API_PATH } from "../constants";
 import { getApiResponse } from "../api-response";
+import { CustomError } from "../errors/custom-error";
+import { getAbsoluteLocation } from "../utils/absolute-location";
 
 const router = Router();
 
 const createExpense: RequestHandler = async (req, res) => {
   const { at, amount, category, note } = req.body;
-
-  if (!at) {
-    res.send(getApiResponse(400, "fail", { at: "at field cannot be null" }));
-  }
-
-  if (!amount) {
-    res.send(
-      getApiResponse(400, "fail", { amount: "amount field cannot be null" })
-    );
-  }
-
-  if (!category) {
-    res.send(
-      getApiResponse(400, "fail", { category: "category field cannot be null" })
-    );
-  }
 
   try {
     const expense = await ExpenseService.createExpense(
@@ -32,7 +18,7 @@ const createExpense: RequestHandler = async (req, res) => {
       note
     );
     res.set({
-      Location: req.baseUrl + API_PATH + `/expenses/${expense.id}`,
+      Location: getAbsoluteLocation(req, `/expenses/${expense.id}`),
     });
     res.send(
       getApiResponse(201, "success", {
@@ -41,34 +27,39 @@ const createExpense: RequestHandler = async (req, res) => {
           links: [
             {
               rel: "self",
-              href: req.baseUrl + API_PATH + `/expenses/${expense.id}`,
+              href: getAbsoluteLocation(req, `/expenses/${expense.id}`),
             },
           ],
         },
-        links: [
-          {
-            rel: "delete-expense",
-            href: req.baseUrl + API_PATH + `/expenses/${expense.id}`,
-            method: "DELETE",
-          },
-          {
-            rel: "edit-expense",
-            href: req.baseUrl + API_PATH + `/expenses/${expense.id}`,
-            method: "PUT",
-          },
-        ],
       })
     );
   } catch (err) {
     console.error("Error: ", err);
-    res.send(
-      getApiResponse(
-        500,
-        "error",
-        { exception: "UnexpectedServerError" },
-        "Server returned error"
-      )
-    );
+
+    if (err instanceof CustomError) {
+      res.status(err.statusCode).send(
+        getApiResponse(
+          err.statusCode,
+          err.statusText,
+          {
+            ...err.data,
+            path: getAbsoluteLocation(req, `/expenses`),
+          },
+          err.statusMessage
+        )
+      );
+    } else {
+      res.status(500).send(
+        getApiResponse(
+          500,
+          "Internal Server Error",
+          {
+            message: "Unexpected error in the server",
+          },
+          "Server failed to serve the request due to internal error, please try later!"
+        )
+      );
+    }
   }
 };
 
