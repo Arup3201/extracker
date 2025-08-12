@@ -7,8 +7,8 @@ async function createTables() {
             id VARCHAR(150) PRIMARY KEY, 
             created_at TIMESTAMP WITH TIME ZONE NOT NULL, 
             updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
-            name VARCHAR(150) NOT NULL, 
-            value VARCHAR(150) NOT NULL
+            name VARCHAR(150) UNIQUE NOT NULL, 
+            value VARCHAR(150) UNIQUE NOT NULL
         )
     `);
 
@@ -19,7 +19,7 @@ async function createTables() {
             created_at TIMESTAMP WITH TIME ZONE NOT NULL, 
             updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
             amount DECIMAL(2) NOT NULL, 
-            category VARCHAR(150) REFERENCES categories(id), 
+            category VARCHAR(150) REFERENCES categories(value), 
             expense_at TIMESTAMP WITH TIME ZONE NOT NULL,
             note TEXT
         )
